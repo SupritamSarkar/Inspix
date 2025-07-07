@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #b8cadb;
+  color: #333;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+/* 🔹 Navbar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  padding: 18px 40px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+nav h2 {
+  font-weight: bold;
+  color: #000000;
+}
+
+nav div a {
+  text-decoration: none;
+  color: #000000;
+  margin-left: 25px;
+  font-weight: 600;
+}
+
+nav div a:hover {
+  color: #007bff;
+}
+
+.post-details-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+  font-size: large;
+}
+
+.post-image {
+  width: 80%; 
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.post-info {
+  width: 40%;
+  text-align: left;
+}
+
+.comments-section {
+  width: 100%; 
+  max-width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0f0f0;
+  border-radius: 5px;
+}
+
+
+
+.post-actions {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  margin-top: 10px;
+  padding: 3px;
+  gap: 10px; 
+}
+
+
+.comment-box {
+  display: none;
+  margin-top: 5px;
+  
+}
+
+.comment-box input {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.comment-box button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.comments-list {
+  border-top: #000000 solid 2px;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+
+/* ✅ Style the Delete Button */
+.delete-btn {
+  background: red;
+  color: white;
+  font-size: 14px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: rgb(223, 78, 78);
+}
+
+/* ✅ Ensure Like & Comment buttons have a similar size */
+.like-btn, .comment-btn {
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  
+}
+
+.like-btn:hover, .comment-btn:hover {
+  background: gray;
+}

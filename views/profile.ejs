@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="/stylesheets/profile.css">
+</head>
+
+<body>
+  <nav>
+    <h2>Inspix</h2>
+    <div>
+      <a href="/home">Home</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="profile-section">
+    <div class="profile-wrapper">
+      <div class="profile-pic-wrapper">
+        <img id="profilePic" src="<%= userdata.profilePic %>" class="avatar" />
+        <input type="file" id="profilePicInput" accept="image/*" hidden>
+        <button id="editProfilePicBtn" class="edit-icon">🖊️</button>
+      </div>
+      <h1 class="username-text">
+        <%= userdata.username %>
+      </h1>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <input type="file" id="postImageInput" accept="image/*" hidden>
+    <button id="uploadPostBtn">Upload New Image</button>
+  </div>
+
+   <!-- Posts Container -->
+   <div class="posts-container">
+    <% posts.forEach(post=> { %>
+      <a href="/post/<%= post._id %>">
+        <div class="post-item">
+          <img src="<%= post.imageUrl %>" class="post-image" />
+        </div>
+      </a>
+     
+     
+    <% }) %>
+  </div>
+</body>
+
+
+
+
+
+
+<script>
+  // Profile Picture Update
+  document.getElementById("editProfilePicBtn").addEventListener("click", function () {
+    document.getElementById("profilePicInput").click();
+  });
+
+  document.getElementById("profilePicInput").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("profilePic").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    fetch("/update-profile-pic", {
+      method: "POST",
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById("profilePic").src = data.profilePic;
+        } else {
+          alert("Failed to upload image.");
+        }
+      })
+      .catch(error => console.error("Error:", error));
+  });
+
+
+  // ✅ Upload Post & Save in Database
+  document.addEventListener("DOMContentLoaded", function () {
+  const postImageInput = document.getElementById("postImageInput");
+  const uploadPostBtn = document.getElementById("uploadPostBtn");
+  const postsContainer = document.querySelector(".posts-container");
+
+  uploadPostBtn.addEventListener("click", () => postImageInput.click());
+
+  postImageInput.addEventListener("change", async function () {
+    const file = postImageInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("/upload-post", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // ✅ Append the new post **immediately** to the page
+        const newPost = document.createElement("div");
+        newPost.innerHTML = `
+          <a href="/post/${data.postId}">
+            <div class="post-item">
+              <img src="${data.imageUrl}" class="post-image"/>
+            </div>
+          </a>
+          
+          
+        `;
+
+        // Insert the new post **at the top** of the posts container
+        postsContainer.prepend(newPost);
+
+        alert("Post uploaded successfully!");
+      } else {
+        alert("Error uploading post.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to upload post.");
+    }
+  });
+});
+
+
+</script>
+
+</html>
