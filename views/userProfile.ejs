@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="/stylesheets/profile.css" />
+</head>
+<body>
+  <nav>
+    <h2>Inspix</h2>
+    <div>
+      <a href="/home">Home</a>
+      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Profile Section -->
+  <div class="profile-section">
+    <div class="profile-wrapper">
+      <div class="profile-pic-wrapper">
+        <img id="profilePic" src="<%= userdata.profilePic %>" class="avatar" />
+      </div>
+
+      <h1 class="username-text"><%= userdata.username %></h1>
+
+      <!-- ✅ Follow / Unfollow Button -->
+      <% if (!isOwnProfile) { %>
+        <form action="/<%= isFollowing ? 'unfollow' : 'follow' %>/<%= userdata._id %>" method="POST">
+          <button class="follow-btn"><%= isFollowing ? 'Unfollow' : 'Follow' %></button>
+        </form>
+      <% } %>
+
+      <!-- ✅ Follower & Following Counts -->
+      <div class="follow-counts">
+        <a href="/user/<%= userdata._id %>/followers"><%= userdata.followers.length %> Followers</a>
+        <span>·</span>
+        <a href="/user/<%= userdata._id %>/following"><%= userdata.following.length %> Following</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts Container -->
+  <div class="posts-container">
+    <% userdata.posts?.forEach(post => { %>
+      <a href="/post/<%= post._id %>">
+        <div class="post-item">
+          <img src="<%= post.imageUrl %>" class="post-image" />
+        </div>
+      </a>
+    <% }) %>
+  </div>
+</body>
+</html>

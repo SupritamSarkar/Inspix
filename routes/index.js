@@ -200,18 +200,35 @@ router.post("/comment/:postId", isLoggedIn, async (req, res) => {
   }
 });
 
-// 🔍 View Single Post
+// 📖 View Post Detail(for owner can delete the post)
 router.get("/post/:id", async (req, res) => {
   try {
-    const post = await postModel.findById(req.params.id).populate("user").populate("comments.user");
+    const post = await postModel.findById(req.params.id)
+      .populate("user")
+      .populate("comments.user");
+
     if (!post) return res.status(404).send("Post not found");
-    res.render("postDetails", { post });
-  } catch (err) {
-    console.error("❌ Post Detail Error:", err);
-    res.status(500).send("Error loading post");
+
+    // 🔒 Check if logged-in user is the owner
+    if (!req.user || post.user._id.toString() !== req.user._id.toString()) {
+      // Redirect non-owners to read-only version
+      return res.redirect(`/postDetailAll/${post._id}`);
+    }
+
+    // Owner: render editable postDetails
+    res.render("postDetails", {
+      post,
+      user: req.user, // Pass logged-in user
+    });
+  } catch (error) {
+    console.error("Error fetching post details:", error);
+    res.status(500).send("Error loading post details");
   }
 });
 
+
+
+// 🔍 View Post Details with All Comments(can't delete)
 router.get("/postDetailAll/:id", async (req, res) => {
   try {
     const post = await postModel.findById(req.params.id).populate("user").populate("comments.user");
@@ -222,6 +239,85 @@ router.get("/postDetailAll/:id", async (req, res) => {
     res.status(500).send("Error loading post");
   }
 });
+
+// Follow user
+router.post("/follow/:id", isLoggedIn, async (req, res) => {
+  const userToFollow = await userModel.findById(req.params.id);
+  const currentUser = await userModel.findById(req.user._id);
+
+  if (!userToFollow.followers.includes(req.user._id)) {
+    userToFollow.followers.push(req.user._id);
+    currentUser.following.push(userToFollow._id);
+    await userToFollow.save();
+    await currentUser.save();
+  }
+
+  res.redirect(`/user/${userToFollow._id}`);
+});
+
+// Unfollow user
+router.post("/unfollow/:id", isLoggedIn, async (req, res) => {
+  const userToUnfollow = await userModel.findById(req.params.id);
+  const currentUser = await userModel.findById(req.user._id);
+
+  userToUnfollow.followers = userToUnfollow.followers.filter(id => id.toString() !== req.user._id.toString());
+  currentUser.following = currentUser.following.filter(id => id.toString() !== userToUnfollow._id.toString());
+
+  await userToUnfollow.save();
+  await currentUser.save();
+
+  res.redirect(`/user/${userToUnfollow._id}`);
+});
+
+// View user profile
+router.get("/user/:id", async (req, res) => {
+  try {
+    const profileUser = await userModel
+      .findById(req.params.id)
+      .populate("posts");
+
+    const isOwnProfile = req.user && req.user._id.toString() === req.params.id;
+    const isFollowing = req.user
+      ? profileUser.followers.includes(req.user._id)
+      : false;
+
+    res.render("userProfile", {
+      userdata: profileUser,
+      isOwnProfile,
+      isFollowing,
+    });
+  } catch (err) {
+    console.error("Error loading user profile:", err);
+    res.status(500).send("Error loading profile");
+  }
+});
+
+// 👤 View Followers List
+router.get('/user/:id/followers', async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id).populate('followers');
+    if (!user) return res.status(404).send("User not found");
+
+    res.render('followers', { users: user.followers, title: `${user.username}'s Followers` });
+  } catch (error) {
+    console.error("Error fetching followers:", error);
+    res.status(500).send("Server error");
+  }
+});
+
+// 👥 View Following List
+router.get('/user/:id/following', async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id).populate('following');
+    if (!user) return res.status(404).send("User not found");
+
+    res.render('following', { users: user.following, title: `${user.username} is Following` });
+  } catch (error) {
+    console.error("Error fetching following:", error);
+    res.status(500).send("Server error");
+  }
+});
+
 
 // 🔐 Middleware
 function isLoggedIn(req, res, next) {

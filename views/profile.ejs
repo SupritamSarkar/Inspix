@@ -29,7 +29,16 @@
         <%= userdata.username %>
       </h1>
     </div>
+    <!-- ✅ Follower & Following Counts -->
+      <div class="follow-counts">
+        <a href="/user/<%= userdata._id %>/followers"><%= userdata.followers.length %> Followers</a>
+        <span>·</span>
+        <a href="/user/<%= userdata._id %>/following"><%= userdata.following.length %> Following</a>
+      </div>
   </div>
+
+  
+  
 
   <!-- Upload Section -->
   <div class="upload-section">

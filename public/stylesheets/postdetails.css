@@ -49,6 +49,17 @@ nav div a:hover {
   font-size: large;
 }
 
+.post-user-link {
+  text-decoration: none;
+  color: #f30d19;
+  font-weight: 600;
+}
+
+.post-user-link:hover {
+  text-decoration: underline;
+}
+
+
 .post-image {
   width: 80%; 
   max-height: 80vh;
