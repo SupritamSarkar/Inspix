@@ -1,13 +1,17 @@
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
+  padding-top: 80px; /* Adjust based on your nav height */
 }
 
 
 nav {
   display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   justify-content: space-between;
   align-items: center;
   background-color: rgb(255, 255, 255);

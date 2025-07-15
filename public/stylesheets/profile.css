@@ -10,16 +10,22 @@ body {
   background-color: #b8cadb;
   color: #333;
   overflow-y: auto; /* Enable vertical scrolling */
+  padding-top: 80px; /* Adjust based on your nav height */
 }
 
 
 /* 🔹 Navbar */
 nav {
   display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   justify-content: space-between;
   align-items: center;
   background-color: rgb(255, 255, 255);
-  padding: 12px 40px;
+  padding: 18px 40px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,8 +62,8 @@ nav div a:hover {
 }
 
 .avatar {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid white;
@@ -111,7 +117,7 @@ nav div a:hover {
 }
 
 #uploadPostBtn:hover {
-  background: #0056b3; /* Darker blue on hover */
+  background: #0056b3; 
   transform: scale(1.05);
 }
 
@@ -167,7 +173,7 @@ nav div a:hover {
 
 .follow-counts {
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 18px;
   color: #555;
 }
 
@@ -175,6 +181,9 @@ nav div a:hover {
   text-decoration: none;
   color: black;
   font-weight: 600;
+}
+.follow-counts a:hover {
+  color: #007bff;
 }
 
 .follow-counts span {

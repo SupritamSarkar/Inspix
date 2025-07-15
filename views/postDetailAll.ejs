@@ -26,13 +26,38 @@
           <img src="<%= post.imageUrl %>" class="post-image" />
         </div>
 
-        <!-- ✅ Comments Section (Below Image) -->
+        <!-- ✅ Comments Section with Tabs -->
         <div class="comments-section">
           <h3>Comments</h3>
-          <div class="comments-list">
+
+          <!-- Tabs -->
+          <div class="comment-tabs">
+            <button onclick="showTab('all')">All Comments</button>
+            <button onclick="showTab('my')">My Comments</button>
+          </div>
+
+          <!-- All Comments -->
+          <div class="comment-tab" id="all-comments">
             <% post.comments.forEach(comment => { %>
             <p><strong><%= comment.username %>:</strong> <%= comment.text %></p>
             <% }) %>
+          </div>
+
+          <!-- My Comments -->
+          <div class="comment-tab" id="my-comments" style="display: none">
+            <% post.comments.forEach(comment => { if (user && comment.user &&
+            comment.user._id.toString() === user._id.toString()) { %>
+            <div class="my-comment">
+              <p>
+                <strong><%= comment.username %>:</strong> <%= comment.text %>
+              </p>
+              <button
+                onclick="deleteComment('<%= post._id %>', '<%= comment._id %>')"
+              >
+                Delete
+              </button>
+            </div>
+            <% } }) %>
           </div>
         </div>
       </div>
@@ -129,6 +154,24 @@
             commentInput.value = "";
             location.reload(); // Refresh the page to show the new comment
           }
+        });
+    }
+
+    // Show Comments Tab
+    function showTab(tab) {
+      document.getElementById("all-comments").style.display =
+        tab === "all" ? "block" : "none";
+      document.getElementById("my-comments").style.display =
+        tab === "my" ? "block" : "none";
+    }
+
+    function deleteComment(postId, commentId) {
+      if (!confirm("Delete this comment?")) return;
+      fetch(`/delete-comment/${postId}/${commentId}`, { method: "DELETE" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) location.reload();
+          else alert("Could not delete comment.");
         });
     }
   </script>

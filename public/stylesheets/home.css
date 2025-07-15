@@ -10,12 +10,18 @@ body {
   background-color: #b8cadb;
   color: #333;
   overflow-y: auto; /* Enable vertical scrolling */
+  padding-top: 80px; /* Adjust based on your nav height */
 }
 
 
 /* 🔹 Navbar */
 nav {
   display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   justify-content: space-between;
   align-items: center;
   background-color: rgb(255, 255, 255);

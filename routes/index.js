@@ -233,7 +233,9 @@ router.get("/postDetailAll/:id", async (req, res) => {
   try {
     const post = await postModel.findById(req.params.id).populate("user").populate("comments.user");
     if (!post) return res.status(404).send("Post not found");
-    res.render("postDetailAll", { post });
+    res.render("postDetailAll", { post,
+      user: req.user
+     });
   } catch (err) {
     console.error("❌ Post Detail Error:", err);
     res.status(500).send("Error loading post");
@@ -317,6 +319,36 @@ router.get('/user/:id/following', async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+
+// 🗑️ Delete Comment
+router.delete('/delete-comment/:postId/:commentId', isLoggedIn, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const post = await postModel.findById(postId);
+    if (!post) return res.status(404).json({ success: false });
+
+    // Find the comment
+    const comment = post.comments.find(c => c._id.toString() === commentId);
+    if (!comment) return res.status(404).json({ success: false, message: "Comment not found" });
+
+    // Check ownership
+    if (comment.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    // Remove comment by filtering
+    post.comments = post.comments.filter(c => c._id.toString() !== commentId);
+
+    await post.save();
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
 
 
 // 🔐 Middleware
