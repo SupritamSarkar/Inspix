@@ -74,13 +74,33 @@ router.post("/register", async (req, res) => {
 });
 
 // 🔓 Login User
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/profile",
-    failureRedirect: "/login",
-  })
-);
+router.post("/login", async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+
+    // Step 1: Check if user exists
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return res.render("login", { error: "Invalid username" });
+    }
+
+    // Step 2: Verify password
+    const isValid = await user.authenticate(password);
+    if (!isValid.user) {
+      return res.render("login", { error: "Invalid password" });
+    }
+
+    // Step 3: Log in user
+    req.login(user, (err) => {
+      if (err) return next(err);
+      return res.redirect("/profile");
+    });
+  } catch (err) {
+    console.error("❌ Login Error:", err);
+    res.status(500).send("Something went wrong during login.");
+  }
+});
+
 
 // 🚪 Logout
 router.get("/logout", (req, res, next) => {

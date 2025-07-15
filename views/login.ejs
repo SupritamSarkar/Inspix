@@ -17,6 +17,11 @@
     <div class="content">
       <p class="header">Welcome to Inspix<br>Log in</p>
 
+      <% if (typeof error !== "undefined") { %>
+        <p style="color: red; font-weight: medium; margin-bottom: 10px">
+          <%= error %>
+        </p>
+        <% } %>
 
        <form action="/login" method="post">
       
