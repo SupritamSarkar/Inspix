@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/stylesheets/follow-list.css">
-</head>
-<body>
-  <nav>
-    <h2>Inspix</h2>
-    <div>
-      <a href="/home">Home</a>
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/follow-list.css" />
+  </head>
+  <body>
+    <nav>
+      <h2>Inspix</h2>
+      <div>
+        <a href="/home">Home</a>
         <a href="/profile">Profile</a>
-      <a href="/logout">Logout</a>
-    </div>
-  </nav>
-
-  <div class="list-container">
-    <h3>My Followers</h3>
-    <% users.forEach(user => { %>
-      <div class="user-card">
-        <img src="<%= user.profilePic %>" alt="profile" class="avatar-small">
-        <a href="/user/<%= user._id %>" class="username-link"><%= user.username %></a>
+        <a href="/logout">Logout</a>
+        <div class="delete-dropdown">
+          <button class="drop-btn">▾</button>
+          <div class="dropdown-options">
+            <form
+              action="/delete-account"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete your account? All posts will be permanently removed.');"
+            >
+              <button type="submit" class="delete-account-btn">
+                Delete Account
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-    <% }) %>
-  </div>
-</body>
+    </nav>
+
+    <div class="list-container">
+      <h3>My Followers</h3>
+      <% users.forEach(user => { %>
+      <div class="user-card">
+        <img src="<%= user.profilePic %>" alt="profile" class="avatar-small" />
+        <a href="/user/<%= user._id %>" class="username-link"
+          ><%= user.username %></a
+        >
+      </div>
+      <% }) %>
+    </div>
+  </body>
 </html>

@@ -1,44 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>home</title>
+    <link rel="stylesheet" href="/stylesheets/home.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>home</title>
-  <link rel="stylesheet" href="/stylesheets/home.css">
-</head>
+  <body>
+    <nav>
+      <h2>Inspix</h2>
+      <div>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+        <div class="delete-dropdown">
+          <button class="drop-btn">▾</button>
+          <div class="dropdown-options">
+            <form
+              action="/delete-account"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete your account? All posts will be permanently removed.');"
+            >
+              <button type="submit" class="delete-account-btn">
+                Delete Account
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-<body>
-  <nav>
-    <h2>Inspix</h2>
-    <div>
-      <a href="/profile">Profile</a>
-      <a href="/logout">Logout</a>
-    </div>
-  </nav>
-
-  <!-- Posts Container -->
-  <div class="posts-container">
-    <% posts.forEach(post => { %>
+    <!-- Posts Container -->
+    <div class="posts-container">
+      <% posts.forEach(post => { %>
 
       <div class="post-item" onclick="redirectToPost('<%= post._id %>')">
         <img src="<%= post.imageUrl %>" class="post-image" />
       </div>
-      
-    <% }) %>
-  </div>
-  
 
-</body>
+      <% }) %>
+    </div>
+  </body>
 
-<script>
-  // ✅ Redirect to Post Details Page
-  function redirectToPost(postId) {
-  window.location.href = `/postDetailAll/${postId}`;
-}
-
-
-  
-</script>
-
+  <script>
+    // ✅ Redirect to Post Details Page
+    function redirectToPost(postId) {
+      window.location.href = `/postDetailAll/${postId}`;
+    }
+  </script>
 </html>

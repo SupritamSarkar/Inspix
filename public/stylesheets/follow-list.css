@@ -36,6 +36,58 @@ nav div a:hover {
   color: #007bff;
 }
 
+/* Container for the dropdown */
+.delete-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* The "V" button */
+.drop-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000000; 
+}
+
+
+/* Dropdown menu hidden by default */
+.dropdown-options {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  padding: 10px;
+  min-width: 160px;
+}
+
+/* Delete button inside the dropdown */
+.delete-account-btn {
+  background: none;
+  border: none;
+  padding: 10px;
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.delete-account-btn:hover {
+  color: rgb(0, 0, 0);
+}
+
+/* Toggle the dropdown on hover */
+.delete-dropdown:hover .dropdown-options {
+  display: block;
+}
+
 .list-container {
   padding: 20px;
   max-width: 600px;

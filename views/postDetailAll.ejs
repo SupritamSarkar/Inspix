@@ -15,6 +15,20 @@
         <a href="/home">Home</a>
         <a href="/profile">Profile</a>
         <a href="/logout">Logout</a>
+        <div class="delete-dropdown">
+          <button class="drop-btn">▾</button>
+          <div class="dropdown-options">
+            <form
+              action="/delete-account"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete your account? All posts will be permanently removed.');"
+            >
+              <button type="submit" class="delete-account-btn">
+                Delete Account
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -25,6 +39,11 @@
         <div class="post-image-container">
           <img src="<%= post.imageUrl %>" class="post-image" />
         </div>
+
+        <!-- Download Button -->
+        <form action="/download-image/<%= post._id %>" method="POST">
+          <button type="submit" class="download-btn">Download Image</button>
+        </form>
 
         <!-- ✅ Comments Section with Tabs -->
         <div class="comments-section">

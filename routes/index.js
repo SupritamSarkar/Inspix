@@ -3,6 +3,8 @@ const router = express.Router();
 const passport = require("passport");
 const multer = require("multer");
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 
 const userModel = require("../models/users");
 const postModel = require("../models/post");
@@ -345,6 +347,86 @@ router.delete('/delete-comment/:postId/:commentId', isLoggedIn, async (req, res)
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
+
+// 🗑️ Delete Account
+router.post("/delete-account", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // 1. Delete all user's posts (and remove from Cloudinary if needed)
+    const posts = await postModel.find({ user: userId });
+    for (let post of posts) {
+      if (post.imagePublicId) {
+        await cloudinary.uploader.destroy(post.imagePublicId);
+      }
+      await postModel.findByIdAndDelete(post._id);
+    }
+
+    // 2. Remove this user from followers and following
+    await userModel.updateMany({ followers: userId }, { $pull: { followers: userId } });
+    await userModel.updateMany({ following: userId }, { $pull: { following: userId } });
+
+    // 3. Remove all likes by this user
+    await postModel.updateMany({}, { $pull: { likes: userId } });
+
+    // 4. Remove all comments made by this user
+    await postModel.updateMany({}, { $pull: { comments: { user: userId } } });
+
+    // 5. Delete the user itself
+    await userModel.findByIdAndDelete(userId);
+
+    // 6. Logout and destroy session
+    req.logout(err => {
+      if (err) return res.status(500).send("Logout failed");
+      req.session.destroy(() => {
+        res.clearCookie("connect.sid");
+        res.redirect("/");
+      });
+    });
+  } catch (err) {
+    console.error("❌ Error deleting account:", err);
+    res.status(500).send("Server error during account deletion");
+  }
+});
+
+
+
+// Download image route
+router.post("/download-image/:postId", isLoggedIn, async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.postId);
+    if (!post) return res.status(404).send("Post not found");
+
+    const imageUrl = post.imageUrl;
+    const filename = `download-${Date.now()}.jpg`;
+    const tempPath = path.join(__dirname, "..", "temp", filename);
+
+    // Create temp dir if not exists
+    fs.mkdirSync(path.join(__dirname, "..", "temp"), { recursive: true });
+
+    const file = fs.createWriteStream(tempPath);
+    https.get(imageUrl, response => {
+      response.pipe(file);
+      file.on("finish", () => {
+        file.close(() => {
+          res.download(tempPath, filename, err => {
+            fs.unlink(tempPath, () => {}); // Clean up after sending
+            if (err) console.error("Download error:", err);
+          });
+        });
+      });
+    }).on("error", err => {
+      console.error("Image download failed:", err);
+      fs.unlink(tempPath, () => {});
+      res.status(500).send("Download failed");
+    });
+  } catch (err) {
+    console.error("Download route error:", err);
+    res.status(500).send("Server error");
   }
 });
 
