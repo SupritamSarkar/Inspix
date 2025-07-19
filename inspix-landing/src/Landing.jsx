@@ -82,14 +82,14 @@ const Landing = () => {
           <div className="space-x-5">
             
               <button 
-              onClick={() => handleRedirect("https://inspix-30h1.onrender.com/login")}
+              onClick={() => handleRedirect("https://inspix-cozl.onrender.com/login")}
               className="px-4 py-2 bg-gray-200 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Log In
               </button>
             
             
               <button
-               onClick={() => handleRedirect("https://inspix-30h1.onrender.com")}
+               onClick={() => handleRedirect("https://inspix-cozl.onrender.com")}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Get Started
               </button>
@@ -114,13 +114,13 @@ const Landing = () => {
             <div className="flex space-x-6">
               
               <button
-               onClick={() => handleRedirect("https://inspix-30h1.onrender.com/home")}
+               onClick={() => handleRedirect("https://inspix-cozl.onrender.com/home")}
               className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Start Exploring
               </button>
               
               <button 
-               onClick={() => handleRedirect("https://inspix-30h1.onrender.com")}
+               onClick={() => handleRedirect("https://inspix-cozl.onrender.com")}
               className="px-6 py-3  rounded-xl font-medium text-lg bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Upload Wallpaper
               </button>
@@ -308,7 +308,7 @@ const Landing = () => {
               <div className="flex flex-wrap justify-center gap-4">
                 
                 <button 
-                 onClick={() => handleRedirect("https://inspix-30h1.onrender.com")}
+                 onClick={() => handleRedirect("https://inspix-cozl.onrender.com")}
                 className="text-lg text-blue-700 font-semibold px-8 py-3 bg-white text-primary rounded-lg hover:bg-gray-300 hover:cursor-pointer transition flex items-center">
                   <Upload className="w-5 h-5 mr-2" />
                   Start Uploading
