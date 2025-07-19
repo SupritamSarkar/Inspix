@@ -23,6 +23,8 @@ mongoose.connect(process.env.MONGO_URI)
   console.error("❌ MongoDB connection error:", err);
 });
 
+
+
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -58,6 +60,11 @@ passport.deserializeUser(User.deserializeUser());
 
 // Routes
 app.use('/', indexRouter);
+
+app.get('/login', (req, res) => {
+  res.render('login'); // renders views/login.ejs
+});
+
 
 // 404 Handler
 app.use((req, res, next) => {
